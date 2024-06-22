@@ -1,35 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Text;
-
-const string channelName = "demo-queue";
-const string brokerUrl = "amqp://guest:guest@localhost:5672";
+using RabbitMQ.Producer;
+using RabbitMQ.Shared;
 
 var factory = new ConnectionFactory
 {
-    Uri = new Uri(brokerUrl)
+    Uri = new Uri(ChannelSettings.RabbitMQUrl)
 };
 
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
-channel.QueueDeclare(
-    channelName, 
-    durable: true, 
-    exclusive: false, 
-    autoDelete: false, 
-    arguments: null);
-
 for (int i = 0; i < 10; i++)
 {
-    Console.WriteLine($"Producer -- sending message...{i}");
-    var message = new { Name = "Producer", Message = $"Hello! [{i}]" };
-    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-
-    channel.BasicPublish(string.Empty, channelName, null, body);
+    Console.WriteLine($"Producer -- sending message...[{i}]");
+    QueueProducer.Publish(channel, $"Hello! [{i}]");
     await Task.Delay(2000);
 }
 
-Console.WriteLine("Producer done -- stopping...");
+Console.WriteLine("Producer done");
 Console.ReadLine();
