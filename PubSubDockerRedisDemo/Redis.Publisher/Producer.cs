@@ -21,13 +21,13 @@ public class Producer : BackgroundService
     {
         var subscriber = _connection.GetSubscriber();
 
+        _logger.LogInformation("Producer running at: {time}", DateTimeOffset.Now);
+        
         while (!stoppingToken.IsCancellationRequested)
         {
-            //_logger.LogInformation("Producer running at: {time}", DateTimeOffset.Now);
             var message = new Message(Guid.NewGuid(), DateTime.Now);
             var json = JsonSerializer.Serialize(message);
 
-            //await subscriber.PublishAsync(RedisChannel.Literal(RedisSettings.ChannelName), "Test message");
             await subscriber.PublishAsync(RedisChannel.Literal(RedisSettings.ChannelName), json);
 
             _logger.LogInformation("Sending message: {@message}", message);

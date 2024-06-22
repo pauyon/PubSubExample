@@ -21,11 +21,11 @@ public class Consumer : BackgroundService
     {
         var subscriber = _connection.GetSubscriber();
 
+        _logger.LogInformation("Consumer running at: {time}", DateTimeOffset.Now);
+
         await subscriber.SubscribeAsync(RedisChannel.Literal(RedisSettings.ChannelName), (channel, message) =>
         {
-            var messageDeserialized = JsonSerializer.Deserialize<Message>(message);
-
-            //_logger.LogInformation("Received message: {channel} {message}", channel, message); 
+            var messageDeserialized = JsonSerializer.Deserialize<Message>(message!);
             _logger.LogInformation("Received message: {channel} {@message}", channel, messageDeserialized);
         });
     }
