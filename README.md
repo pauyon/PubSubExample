@@ -1,5 +1,6 @@
 # PubSubExample
 
+# PubSubDockerRedisDemo
 In order to get this project up and running you need to do a couple of things:
   1. Install Docker Desktop
   2. Run the following command in a command prompt window: docker run --name redis-pub-sub -p 6379:6379 -d redis
