@@ -16,7 +16,8 @@ for (int i = 0; i < 10; i++)
     Console.WriteLine($"Producer -- sending message...[{i}]");
     //QueueProducer.Publish(channel, $"Hello! [{i}]");
     //DirectExchangeProducer.Publish(channel, $"Hello! [{i}]");
-    TopicExchangeProducer.Publish(channel, $"Hello! [{i}]");
+    //TopicExchangeProducer.Publish(channel, $"Hello! [{i}]");
+    HeaderExchangeProducer.Publish(channel, $"Hello! [{i}]");
     await Task.Delay(2000);
 }
 

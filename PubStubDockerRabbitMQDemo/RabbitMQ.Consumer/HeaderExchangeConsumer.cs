@@ -1,25 +1,25 @@
-﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
+﻿using RabbitMQ.Client.Events;
+using RabbitMQ.Client;
 using RabbitMQ.Shared;
 using System.Text;
 
 namespace RabbitMQ.Consumer;
 
-public static class TopicExchangeConsumer
+public static class HeaderExchangeConsumer
 {
     public static void Consume(IModel channel)
     {
-        channel.ExchangeDeclare(PubSubSettings.Exchange.TopicExchange, ExchangeType.Topic);
+        channel.ExchangeDeclare(PubSubSettings.Exchange.HeaderExchange, ExchangeType.Headers);
 
         channel.QueueDeclare(
-            PubSubSettings.Queue.Topic,
+            PubSubSettings.Queue.Header,
             durable: true,
             exclusive: false,
             autoDelete: false,
             arguments: null);
 
         // What binds the consumer to the appropriate channel/queue
-        channel.QueueBind(PubSubSettings.Queue.Topic, PubSubSettings.Exchange.TopicExchange, PubSubSettings.Routing.WildCardKey);
+        channel.QueueBind(PubSubSettings.Queue.Header, PubSubSettings.Exchange.HeaderExchange, string.Empty, PubSubSettings.HeaderExchangeHeaderValues);
 
         // Will make consumer fetch 10 messages as once
         channel.BasicQos(0, 10, false);
@@ -33,7 +33,7 @@ public static class TopicExchangeConsumer
             Console.WriteLine("Consuemer received: " + message);
         };
 
-        channel.BasicConsume(PubSubSettings.Queue.Topic, true, consumer);
+        channel.BasicConsume(PubSubSettings.Queue.Header, true, consumer);
         Console.WriteLine("Consumer started");
         Console.ReadLine();
     }
