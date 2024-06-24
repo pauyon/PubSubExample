@@ -20,6 +20,7 @@ public static class TopicExchangeProducer
         var message = new { Name = "Producer", Message = publishMessage };
         var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
+        // This produces a pattern match and consumers who meet this match will receive the message
         channel.BasicPublish(PubSubSettings.Exchange.TopicExchange, PubSubSettings.Routing.RoutingKey1, null, body);
     }
 }

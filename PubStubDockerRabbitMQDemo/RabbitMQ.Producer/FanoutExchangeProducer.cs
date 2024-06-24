@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RabbitMQ.Producer;
 
-public static class HeaderExchangeProducer
+public static class FanoutExchangeProducer
 {
     public static void Publish(IModel channel, string publishMessage)
     {
@@ -15,15 +15,12 @@ public static class HeaderExchangeProducer
             { "x-message-ttl", 30000 }
         };
 
-        channel.ExchangeDeclare(PubSubSettings.Exchange.HeaderExchange, ExchangeType.Headers, arguments: ttl);
+        channel.ExchangeDeclare(PubSubSettings.Exchange.Fanout, ExchangeType.Fanout, arguments: ttl);
 
         var message = new { Name = "Producer", Message = publishMessage };
         var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-        var properties = channel.CreateBasicProperties();
-        properties.Headers = PubSubSettings.HeaderExchangeHeaderValues;
-
-        // This produces a match based on header values, and those with matching headers will receive message
-        channel.BasicPublish(PubSubSettings.Exchange.HeaderExchange, string.Empty, properties, body);
+        // With or without routing key or header attributes, consumers will receive these messages
+        channel.BasicPublish(PubSubSettings.Exchange.Fanout, string.Empty, null, body);
     }
 }

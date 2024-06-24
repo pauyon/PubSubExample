@@ -15,6 +15,7 @@ public static class PubSubSettings
         public const string Direct = "demo-direct-queue";
         public const string Topic = "demo-topic-queue";
         public const string Header = "demo-header-queue";
+        public const string Fanout = "demo-fanout-queue";
     }
 
     public static class Exchange
@@ -22,6 +23,7 @@ public static class PubSubSettings
         public const string DirectExchange = "demo-direct-exchange";
         public const string TopicExchange = "demo-topic-exchange";
         public const string HeaderExchange = "demo-header-exchange";
+        public const string Fanout = "demo-fanout-exchange";
     }
 
     public static class Routing
